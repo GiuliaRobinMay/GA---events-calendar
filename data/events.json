@@ -7,6 +7,7 @@
     "spaceUrl": "https://friends.goatacademy.org/spaces/16767656/events",
     "postUrlBase": "https://friends.goatacademy.org/posts/",
     "fetchedAt": "2026-08-19",
+    "generatedAt": "2026-08-19T13:20:00Z",
     "coverage": { "from": "2026-08-02", "to": "2026-09-07" },
     "source": "GOAT Academy MCP · list_events, scoped by spaceId (GlobalID) and fetched in date windows of <=50 instances",
     "instanceFormat": ["postResourceId", "startsAt", "durationMinutes", "rsvpYes", "rsvpMaybe", "rsvpNo"]
