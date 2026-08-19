@@ -27,9 +27,11 @@ Two layers, so the calendar is never stale:
    baked snapshot for live data. Viewers without the connector — or any
    failure — fall back to the snapshot, with a status chip + fix hint.
 2. **Daily snapshot refresh.** A scheduled Claude task re-fetches the events
-   via the GOAT Academy MCP each morning, rewrites `data/events.json`, runs
-   `scripts/build.py`, pushes to `main`, and republishes the same Artifact
-   URL. So even snapshot-only viewers are at most a day behind.
+   via the GOAT Academy MCP each morning — from 7 days back through the **end
+   of next month**, so every navigable month is completely filled — rewrites
+   `data/events.json`, runs `scripts/build.py`, pushes to `main`, and
+   republishes the same Artifact URL. So even snapshot-only viewers are at
+   most a day behind.
 
 ### MCP fetch notes (for the refresh task)
 
@@ -62,7 +64,8 @@ the **Live Events Rubric** and **Coaches Guide** in the Trading Roadmap PDF:
 ## Design
 
 Branding follows the Trading Roadmap app: teal→blue gradient band, blue
-wordmark + tile, "2026 Edition" pill, lime live/next pill, tabbed nav, and a
-rubric-style colour-key card. Dark and light themes with a 3-state toggle
-(follow system / dark / light). Fonts: Archivo (display), Inter (UI),
-IBM Plex Mono (times). All event times render in the viewer's timezone.
+wordmark + tile, and the lime next-session pill. One calendar, two densities —
+Month and Week — switched by a segmented toggle; the filter chips double as
+the colour legend. Dark and light themes with a 3-state toggle (follow
+system / dark / light). Fonts: Archivo (display), Inter (UI), IBM Plex Mono
+(times). All event times render in the viewer's timezone.
