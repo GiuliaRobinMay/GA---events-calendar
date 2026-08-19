@@ -1,0 +1,1048 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOAT Academy Live Calendar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f6f7f5;
+    --surface: #ffffff;
+    --surface-2: #eef1ed;
+    --wash: #f1f3f0;
+    --ink: #141915;
+    --ink-2: #566058;
+    --ink-3: #8a948c;
+    --line: #e2e6e1;
+    --line-2: #cbd2cb;
+    --accent: #146c4e;
+    --accent-ink: #ffffff;
+    --accent-soft: #e4f0e9;
+    --cat-market: #2a78d6;
+    --cat-trading: #eb6834;
+    --cat-wsp: #1baf7a;
+    --cat-investing: #eda100;
+    --cat-onboarding: #e87ba4;
+    --cat-path: #4a3aa7;
+    --shadow: 0 18px 48px rgba(16, 26, 20, 0.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d110f;
+      --surface: #151a17;
+      --surface-2: #1d2420;
+      --wash: #181e1a;
+      --ink: #edf1ec;
+      --ink-2: #a7b2a9;
+      --ink-3: #76817a;
+      --line: #262f29;
+      --line-2: #33403a;
+      --accent: #43be8c;
+      --accent-ink: #08130d;
+      --accent-soft: #163023;
+      --cat-market: #3987e5;
+      --cat-trading: #d95926;
+      --cat-wsp: #199e70;
+      --cat-investing: #c98500;
+      --cat-onboarding: #d55181;
+      --cat-path: #9085e9;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d110f;
+    --surface: #151a17;
+    --surface-2: #1d2420;
+    --wash: #181e1a;
+    --ink: #edf1ec;
+    --ink-2: #a7b2a9;
+    --ink-3: #76817a;
+    --line: #262f29;
+    --line-2: #33403a;
+    --accent: #43be8c;
+    --accent-ink: #08130d;
+    --accent-soft: #163023;
+    --cat-market: #3987e5;
+    --cat-trading: #d95926;
+    --cat-wsp: #199e70;
+    --cat-investing: #c98500;
+    --cat-onboarding: #d55181;
+    --cat-path: #9085e9;
+    --shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+  [hidden] { display: none !important; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  a { color: var(--accent); }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .app { max-width: 1280px; margin: 0 auto; padding: 22px 20px 40px; }
+
+  /* ---------- header ---------- */
+  .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; flex-wrap: wrap; margin-bottom: 18px; }
+  .brand { display: flex; gap: 13px; align-items: center; }
+  .goatmark { width: 42px; height: 42px; color: var(--accent); flex: none; }
+  .wordmark {
+    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800; font-size: 11px; letter-spacing: 0.22em;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .apptitle {
+    margin: 1px 0 3px;
+    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700; font-size: 25px; line-height: 1.1; letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .spaceline { font-size: 12.5px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .spaceline a { color: var(--ink-2); text-decoration-color: var(--line-2); }
+  .spaceline a:hover { color: var(--accent); }
+  .spacedot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+  .nextup {
+    border: 1px solid var(--line); background: var(--surface);
+    border-radius: 12px; padding: 11px 16px; min-width: 250px; max-width: 360px;
+  }
+  .nextup .lbl { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ink-3); text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+  .livedot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .nextup .nt { font-weight: 600; font-size: 13.5px; margin: 4px 0 2px; display: block; color: var(--ink); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px; }
+  .nextup .nt:hover { color: var(--accent); }
+  .nextup .in { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+
+  /* ---------- toolbar ---------- */
+  .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .mnav { display: flex; align-items: center; gap: 2px; }
+  .navbtn {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--surface); display: grid; place-items: center; font-size: 16px; color: var(--ink-2);
+  }
+  .navbtn:hover:not(:disabled) { border-color: var(--line-2); color: var(--ink); }
+  .navbtn:disabled { opacity: 0.35; cursor: default; }
+  .mtitle {
+    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700; font-size: 19px; min-width: 172px; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .btn {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 8px;
+    padding: 6px 13px; font-size: 13px; font-weight: 500; color: var(--ink-2);
+  }
+  .btn:hover { border-color: var(--line-2); color: var(--ink); }
+  .spacer { flex: 1; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: var(--surface); }
+  .seg button { padding: 6px 15px; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .tzchip {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-3);
+    border: 1px dashed var(--line-2); border-radius: 8px; padding: 6px 10px;
+  }
+
+  /* ---------- legend / filters ---------- */
+  .legend { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+  .lchip {
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+    padding: 4px 11px 4px 8px; font-size: 12px; font-weight: 500; color: var(--ink-2);
+  }
+  .lchip .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--c); flex: none; }
+  .lchip .n { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--ink-3); }
+  .lchip[aria-pressed="false"] { opacity: 0.42; }
+  .lchip[aria-pressed="false"] .dot { background: var(--ink-3); }
+  .lchip:hover { border-color: var(--line-2); color: var(--ink); }
+  .lhint { font-size: 11.5px; color: var(--ink-3); margin-left: auto; }
+
+  .notice {
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    background: var(--surface); color: var(--ink-2);
+    border-radius: 9px; padding: 8px 13px; font-size: 12.5px; margin-bottom: 12px;
+  }
+
+  /* ---------- month grid ---------- */
+  .dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 6px; }
+  .dow div {
+    font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-3); padding: 0 4px 2px; text-align: left;
+  }
+  .cells { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cell {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    min-height: 122px; padding: 7px 6px 6px; display: flex; flex-direction: column; gap: 4px;
+    overflow: hidden;
+  }
+  .cell.we { background: var(--wash); }
+  .cell.out { opacity: 0.5; }
+  .cell.past .chip { opacity: 0.5; }
+  .dnum {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
+    color: var(--ink-2); align-self: flex-start; padding: 1px 6px; border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cell.today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .cell.today .dnum { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .chips { display: flex; flex-direction: column; gap: 3px; }
+  .chip {
+    display: flex; align-items: center; gap: 5px; width: 100%;
+    border-radius: 6px; padding: 2.5px 6px; text-align: left;
+    background: color-mix(in srgb, var(--c) 13%, var(--surface));
+    font-size: 11px; line-height: 1.35; color: var(--ink);
+  }
+  .chip:hover { background: color-mix(in srgb, var(--c) 26%, var(--surface)); }
+  .chip .dot { width: 7px; height: 7px; border-radius: 2.5px; background: var(--c); flex: none; }
+  .chip .tm { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--ink-2); flex: none; font-variant-numeric: tabular-nums; }
+  .chip .ct { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .more { font-size: 10.5px; color: var(--ink-3); font-weight: 500; padding: 1px 6px; border-radius: 5px; align-self: flex-start; }
+  .more:hover { color: var(--accent); background: var(--accent-soft); }
+
+  /* ---------- agenda ---------- */
+  .agenda { display: flex; flex-direction: column; gap: 18px; max-width: 860px; }
+  .agday .agh {
+    display: flex; align-items: baseline; gap: 9px; margin-bottom: 7px;
+    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-weight: 700; font-size: 15px;
+  }
+  .agday .agh .wd { color: var(--ink-3); font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .agday.istoday .agh .wd { color: var(--accent); }
+  .agrows { display: flex; flex-direction: column; gap: 5px; }
+  .agrow {
+    display: flex; align-items: center; gap: 11px; text-align: left; width: 100%;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px;
+  }
+  .agrow:hover { border-color: var(--line-2); }
+  .agrow .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--c); flex: none; }
+  .agrow .tm { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-2); flex: none; min-width: 96px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .agrow .ti { font-weight: 500; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .agrow .rs { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-3); flex: none; }
+  .agempty { color: var(--ink-2); font-size: 14px; padding: 26px 0; }
+
+  /* ---------- drawer ---------- */
+  .backdrop {
+    position: fixed; inset: 0; background: rgba(8, 12, 10, 0.42);
+    opacity: 0; pointer-events: none; transition: opacity 0.18s ease; z-index: 40;
+  }
+  .backdrop.on { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(430px, 100vw);
+    background: var(--surface); border-left: 1px solid var(--line); box-shadow: var(--shadow);
+    transform: translateX(102%); transition: transform 0.22s ease; z-index: 50;
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+  .drawer.on { transform: translateX(0); }
+  .dhead { display: flex; align-items: center; gap: 8px; padding: 15px 18px 0; }
+  .dhead .spacer { flex: 1; }
+  .iconbtn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--ink-2); font-size: 14px; background: var(--surface); }
+  .iconbtn:hover { color: var(--ink); border-color: var(--line-2); }
+  .dbody { padding: 12px 22px 26px; }
+  .catpill {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 600;
+    letter-spacing: 0.04em; color: var(--ink-2);
+    background: color-mix(in srgb, var(--c) 14%, var(--surface));
+    border-radius: 999px; padding: 3px 11px 3px 8px; margin-bottom: 11px;
+  }
+  .catpill .dot { width: 8px; height: 8px; border-radius: 3px; background: var(--c); }
+  .dtitle { font-family: "Archivo", "Helvetica Neue", Arial, sans-serif; font-weight: 700; font-size: 21px; line-height: 1.18; margin: 0 0 13px; text-wrap: balance; }
+  .dwhen { border-top: 1px solid var(--line); padding: 11px 0; font-size: 13.5px; color: var(--ink-2); display: grid; gap: 3px; }
+  .dwhen .d1 { color: var(--ink); font-weight: 600; }
+  .dwhen .mono { font-size: 12.5px; }
+  .rsvps { display: flex; gap: 7px; margin: 13px 0 4px; flex-wrap: wrap; }
+  .rsvp { border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px; text-align: center; min-width: 76px; }
+  .rsvp b { display: block; font-family: "IBM Plex Mono", monospace; font-size: 16px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .rsvp span { font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.07em; text-transform: uppercase; }
+  .dser { font-size: 12.5px; color: var(--ink-3); margin: 9px 0 17px; }
+  .cta {
+    display: inline-block; background: var(--accent); color: var(--accent-ink);
+    font-weight: 600; font-size: 14px; border-radius: 9px; padding: 10px 17px; text-decoration: none;
+  }
+  .cta:hover { filter: brightness(1.07); }
+  .daylist { display: flex; flex-direction: column; gap: 5px; margin-top: 9px; }
+
+  footer { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 13px; font-size: 12px; color: var(--ink-3); display: grid; gap: 3px; }
+  footer a { color: var(--ink-2); }
+
+  @media (max-width: 760px) {
+    .app { padding: 14px 10px 30px; }
+    .apptitle { font-size: 20px; }
+    .nextup { min-width: 0; width: 100%; max-width: none; }
+    .cell { min-height: 86px; padding: 5px 4px 4px; }
+    .chip .ct { display: none; }
+    .chip { padding: 2px 4px; }
+    .lhint { display: none; }
+    .agrow .rs { display: none; }
+    .agrow .tm { width: 88px; }
+    .mtitle { min-width: 0; font-size: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .livedot { animation: none; }
+    .drawer, .backdrop { transition: none; }
+  }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="goatmark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M10 6 C6 12 7 19 13 22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="M38 6 C42 12 41 19 35 22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="M14 20 L24 15 L34 20 L31 33 L24 40 L17 33 Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="24" cy="27" r="2.2" fill="currentColor"/>
+      </svg>
+      <div>
+        <span class="wordmark">Goat Academy · The Money School</span>
+        <h1 class="apptitle">Live Events Calendar</h1>
+        <div class="spaceline">
+          <span class="spacedot"></span>
+          <a href="https://friends.goatacademy.org/spaces/16767656/events" target="_blank" rel="noopener">Join Live Group Coaching</a>
+          <span>· all sessions from this space</span>
+        </div>
+      </div>
+    </div>
+    <div class="nextup" id="nextup" hidden>
+      <span class="lbl"><span class="livedot" id="ndot"></span><span id="nlbl">Next session</span></span>
+      <a class="nt" id="ntitle" href="#" target="_blank" rel="noopener"></a>
+      <span class="in" id="nwhen"></span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="mnav">
+      <button class="navbtn" id="prev" aria-label="Previous month">‹</button>
+      <div class="mtitle" id="mtitle"></div>
+      <button class="navbtn" id="next" aria-label="Next month">›</button>
+    </div>
+    <button class="btn" id="todaybtn">Today</button>
+    <div class="spacer"></div>
+    <div class="seg" role="group" aria-label="View">
+      <button id="vmonth" aria-pressed="true">Month</button>
+      <button id="vagenda" aria-pressed="false">Agenda</button>
+    </div>
+    <span class="tzchip" id="tz"></span>
+  </div>
+
+  <div class="legend" id="legend" aria-label="Filter by session type"></div>
+  <div class="notice" id="notice" hidden></div>
+
+  <main id="main"></main>
+
+  <footer>
+    <span><strong>Mockup preview.</strong> Colours mark the session type for now — they will follow the course levels once those are defined.</span>
+    <span>Event data is a real snapshot of “Join Live Group Coaching” (2 Aug – 7 Sep), fetched 19 Aug 2026 via the GOAT Academy MCP server. The live app will stay current automatically.</span>
+    <span><a href="https://friends.goatacademy.org/spaces/16767656/events" target="_blank" rel="noopener">Open the space in the community ↗</a></span>
+  </footer>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle">
+  <div class="dhead">
+    <button class="iconbtn" id="dback" aria-label="Back to day" hidden>‹</button>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="dclose" aria-label="Close">✕</button>
+  </div>
+  <div class="dbody" id="dbody"></div>
+</aside>
+
+<script id="ga-data" type="application/json">{
+  "meta": {
+    "community": "felix-money-school (GOAT Academy · The Money School)",
+    "spaceTitle": "Join Live Group Coaching",
+    "spaceResourceId": "16767656",
+    "spaceGlobalId": "Z2lkOi8vbWlnaHR5L0ZsZXhTcGFjZS8xNjc2NzY1Ng",
+    "spaceUrl": "https://friends.goatacademy.org/spaces/16767656/events",
+    "postUrlBase": "https://friends.goatacademy.org/posts/",
+    "fetchedAt": "2026-08-19",
+    "coverage": { "from": "2026-08-02", "to": "2026-09-07" },
+    "source": "GOAT Academy MCP · list_events, scoped by spaceId (GlobalID) and fetched in date windows of <=50 instances",
+    "instanceFormat": ["postResourceId", "startsAt", "durationMinutes", "rsvpYes", "rsvpMaybe", "rsvpNo"]
+  },
+  "series": {
+    "103253574": { "t": "Preparing for the Week Ahead", "s": "preparing-for-the-week-ahead" },
+    "105405107": { "t": "(WSP) On Screening", "s": "wsp-on-screening-105405107" },
+    "105405122": { "t": "(WSP) Reducing Portfolio Risk", "s": "wsp-reducing-portfolio-risk" },
+    "105405140": { "t": "(WSP) Q&A", "s": "wsp-qa-105405140" },
+    "99103334": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students-99103334" },
+    "95935955": { "t": "(WSP) On Keeping Track of Large Lists", "s": "wsp-on-keeping-track-of-large-lists-95935955" },
+    "88607175": { "t": "(WSP) Stop Loss Workshop", "s": "wsp-stop-loss-workshop-88607175" },
+    "81161371": { "t": "BROKER FIDELITY | Get Started on Fidelity and Robinhood", "s": "broker-fidelity-get-started-on-fidelity-and-robinhood" },
+    "94135151": { "t": "Markets and Investment Discussion", "s": "markets-and-investment-discussion" },
+    "98772775": { "t": "\"Global Economic Outlook\" with Jesús", "s": "global-economic-outlook-with-jesus" },
+    "95936503": { "t": "(WSP) On Screening, Entries and Exits", "s": "wsp-on-screening-entries-and-exits-95936503" },
+    "98272918": { "t": "(Investing) Investment Securities and Valuation with BK", "s": "investing-investment-securities-and-valuation-with-bk-98272918" },
+    "102305449": { "t": "Felix's Proprietary Tools (Brett and Dominic)", "s": "felixs-proprietary-tools-brett-and-dominic" },
+    "87913685": { "t": "Investing Q&A - BK and Patrick", "s": "investing-qa-bk-and-patrick" },
+    "93814082": { "t": "Stock Market Fundamentals", "s": "stock-market-fundamentals" },
+    "82657819": { "t": "(WSP) Fundamentals as a Safety Net", "s": "wsp-fundamentals-as-a-safety-net-82657819" },
+    "99043376": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students" },
+    "104627270": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students-104627270" },
+    "95936809": { "t": "(WSP) Q&A", "s": "wsp-qa-95936809" },
+    "92924023": { "t": "MARKET REVIEW | The Week's Price Action, Read by the Full Team", "s": "market-review-the-weeks-price-action-read-by-the-full-team-92924023" },
+    "95709739": { "t": "(Investing) - Topic of the Week", "s": "investing-topic-of-the-week" },
+    "101058501": { "t": "Macro Data Analysis for Investors", "s": "macro-data-analysis-for-investors" },
+    "105940929": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students-105940929" },
+    "98364825": { "t": "Market Psychology + Q&A", "s": "market-psychology-qa" },
+    "97749266": { "t": "(Investing) Intro - Investing Fundamentals - BK", "s": "investing-intro-investing-fundamentals-bk" },
+    "101899350": { "t": "(WSP) What are Japanese Candlesticks Trying to tell Us?", "s": "wsp-what-are-japanese-candlesticks-trying-to-tell-us-101899350" },
+    "101899426": { "t": "(WSP) Stalking Breakouts and Pullbacks", "s": "wsp-stalking-breakouts-and-pullbacks" },
+    "95147996": { "t": "(WSP) On Screening, Entries and Exits", "s": "wsp-on-screening-entries-and-exits" },
+    "89296947": { "t": "Your Trading Success Path - Phase 1 (chart reading, indicators, and basic risk management concepts)", "s": "your-trading-success-path-phase-1-chart-reading-indicators-and-basic-risk-management-concepts" },
+    "105522582": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students-105522582" },
+    "95524931": { "t": "Profitable Exit Planning", "s": "profitable-exit-planning" },
+    "94244143": { "t": "Mid week Markets Update and Q&A", "s": "mid-week-markets-update-and-qa" },
+    "98773063": { "t": "Market Mastery: Sectors, Strategies, and Smart Allocation", "s": "market-mastery-sectors-strategies-and-smart-allocation" },
+    "99514488": { "t": "Onboarding Q&A with a SSM for New Students", "s": "onboarding-qa-with-a-ssm-for-new-students" },
+    "92472792": { "t": "Bull Flags: The Anatomy of a Controlled Breakout", "s": "bull-flags-the-anatomy-of-a-controlled-breakout" },
+    "95524914": { "t": "Your Trading Success Path - Phase 2", "s": "your-trading-success-path-phase-2-95524914" },
+    "98060674": { "t": "Your Trading Success Path - Phase ¾ (logging and analysis)", "s": "your-trading-success-path-phase-logging-and-analysis" },
+    "84992557": { "t": "Backtesting 101", "s": "backtesting-101" },
+    "102404494": { "t": "Live Q&A / On-boarding for new students (Platform questions, not trading related)", "s": "live-qa-on-boarding-for-new-students-platform-questions-not-trading-related" },
+    "101590770": { "t": "MARKET REVIEW | The Week's Price Action, Read by the Full Team", "s": "market-review-the-weeks-price-action-read-by-the-full-team-101590770" },
+    "77574889": { "t": "Jesús’ Weekly Charting Session", "s": "jesus-weekly-charting-session" },
+    "79701133": { "t": "BROKER IBKR | Set Up and Master Interactive Brokers", "s": "broker-ibkr-set-up-and-master-interactive-brokers" },
+    "97903955": { "t": "(Investing) General Market Q&A - BK", "s": "investing-general-market-qa-bk" },
+    "105632532": { "t": "Continued Investing Group Q&A - BK's group session", "s": "continued-investing-group-qa-bks-group-session" },
+    "88639021": { "t": "Trade Logging and Analysis", "s": "trade-logging-and-analysis" },
+    "99279166": { "t": "WEEKLY RECAP | The Week in the Markets, Distilled to What Matters", "s": "weekly-recap-the-week-in-the-markets-distilled-to-what-matters" },
+    "78234104": { "t": "Risk Management for Beginners", "s": "risk-management-for-beginners" },
+    "98365165": { "t": "FRIDAY INVESTING Q&A | Long-Term Investing Questions, Answered", "s": "friday-investing-qa-long-term-investing-questions-answered" },
+    "99524637": { "t": "(WSP) What are Japanese Candlesticks Trying to tell Us?", "s": "wsp-what-are-japanese-candlesticks-trying-to-tell-us" },
+    "78118817": { "t": "BROKER TOS | Set Up and Master Thinkorswim", "s": "broker-tos-set-up-and-master-thinkorswim" },
+    "105685987": { "t": "(WSP) On Keeping Track of Large Lists", "s": "wsp-on-keeping-track-of-large-lists-105685987" },
+    "105686009": { "t": "(WSP) Estimating Portfolio Risk", "s": "wsp-estimating-portfolio-risk-105686009" },
+    "105686058": { "t": "(WSP) On Screening", "s": "wsp-on-screening-105686058" },
+    "105686094": { "t": "(WSP) Stop Loss Workshop", "s": "wsp-stop-loss-workshop-105686094" },
+    "105716256": { "t": "(WSP) On Screening, Entries and Exits", "s": "wsp-on-screening-entries-and-exits-105716256" },
+    "105716285": { "t": "(WSP) What are Japanese Candlesticks Trying to tell Us?", "s": "wsp-what-are-japanese-candlesticks-trying-to-tell-us-105716285" },
+    "105716726": { "t": "(WSP) Q&A", "s": "wsp-qa-105716726" },
+    "83690403": { "t": "BASICS OF INVESTING | Core Concepts and Principles to Start", "s": "basics-of-investing-core-concepts-and-principles-to-start" },
+    "97520427": { "t": "(WSP) Stop Loss Workshop", "s": "wsp-stop-loss-workshop-97520427" },
+    "84291484": { "t": "(WSP) Fundamentals as a Safety Net", "s": "wsp-fundamentals-as-a-safety-net-84291484" },
+    "101230736": { "t": "(WSP) Stalking Potential Breakouts", "s": "wsp-stalking-potential-breakouts" },
+    "88837879": { "t": "(WSP) Q&A", "s": "wsp-qa-88837879" },
+    "105945709": { "t": "Last Minute Investing Q&A Session", "s": "last-minute-investing-qa-session" },
+    "90777794": { "t": "Trading Divergences & Setups for the Week Ahead", "s": "trading-divergences-setups-for-the-week-ahead-90777794" },
+    "80791115": { "t": "Trading Plans - Construction and Feedback", "s": "trading-plans-construction-and-feedback" },
+    "97283333": { "t": "(WSP) Estimating Portfolio Risk", "s": "wsp-estimating-portfolio-risk-97283333" },
+    "97285661": { "t": "(WSP) Stop Loss Workshop", "s": "wsp-stop-loss-workshop-97285661" },
+    "106009025": { "t": "(WSP) On Screening", "s": "wsp-on-screening-106009025" },
+    "106009248": { "t": "(WSP) Stalking Potential Breakouts", "s": "wsp-stalking-potential-breakouts-106009248" },
+    "105931305": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students-105931305" },
+    "105931541": { "t": "Live Onboarding Q&A for New Students", "s": "live-onboarding-qa-for-new-students" },
+    "105931112": { "t": "Live Onboarding Q&A with a SSM for New Students", "s": "live-onboarding-qa-with-a-ssm-for-new-students-105931112" },
+    "106012667": { "t": "Advanced Risk Management - with Jesús", "s": "advanced-risk-management-with-jesus" },
+    "106039105": { "t": "Live Q&A / On-boarding for new students (Platform questions, not trading related)", "s": "live-qa-on-boarding-for-new-students-platform-questions-not-trading-related-106039105" }
+  },
+  "instances": [
+    ["103253574", "2026-08-02T19:00:00+07:00", 60, 177, 17, 5],
+    ["105405107", "2026-08-02T14:00:00Z", 60, 20, 0, 1],
+    ["105405122", "2026-08-02T15:15:00Z", 60, 11, 3, 1],
+    ["105405140", "2026-08-02T16:30:00Z", 60, 10, 1, 1],
+    ["99103334", "2026-08-03T15:00:00+02:00", 60, 37, 5, 19],
+    ["95935955", "2026-08-03T08:30:00-05:00", 60, 78, 10, 16],
+    ["88607175", "2026-08-03T09:30:00-05:00", 60, 145, 11, 32],
+    ["81161371", "2026-08-03T15:00:00Z", 60, 23, 4, 14],
+    ["94135151", "2026-08-03T10:00:00-07:00", 60, 101, 12, 15],
+    ["98772775", "2026-08-03T13:30:00-04:00", 60, 97, 18, 10],
+    ["95936503", "2026-08-03T13:30:00-05:00", 60, 124, 3, 21],
+    ["98272918", "2026-08-03T11:30:00-07:00", 45, 25, 2, 5],
+    ["102305449", "2026-08-03T13:00:00-07:00", 60, 79, 8, 9],
+    ["87913685", "2026-08-03T20:05:00Z", 60, 28, 2, 5],
+    ["93814082", "2026-08-03T14:30:00-07:00", 60, 61, 9, 18],
+    ["82657819", "2026-08-03T18:45:00-05:00", 60, 70, 7, 19],
+    ["99043376", "2026-08-04T15:00:00+02:00", 60, 34, 4, 9],
+    ["104627270", "2026-08-04T14:00:00Z", 60, 6, 2, 1],
+    ["95936809", "2026-08-04T10:00:00-05:00", 60, 40, 3, 8],
+    ["92924023", "2026-08-04T18:00:00+02:00", 60, 100, 17, 25],
+    ["95709739", "2026-08-04T10:00:00-07:00", 60, 59, 11, 12],
+    ["101058501", "2026-08-04T13:30:00-04:00", 60, 65, 12, 7],
+    ["105940929", "2026-08-04T20:30:00+02:00", 60, 4, 1, 1],
+    ["98364825", "2026-08-04T15:15:00-04:00", 75, 50, 7, 10],
+    ["97749266", "2026-08-04T12:30:00-07:00", 60, 43, 3, 19],
+    ["101899350", "2026-08-04T16:15:00-05:00", 60, 33, 1, 8],
+    ["101899426", "2026-08-04T17:30:00-05:00", 60, 55, 4, 12],
+    ["95147996", "2026-08-04T18:45:00-05:00", 60, 79, 7, 18],
+    ["89296947", "2026-08-05T08:00:00-05:00", 60, 202, 36, 71],
+    ["105522582", "2026-08-05T14:00:00Z", 60, 12, 2, 0],
+    ["95524931", "2026-08-05T11:00:00-05:00", 60, 128, 20, 23],
+    ["94244143", "2026-08-05T09:30:00-07:00", 60, 61, 12, 14],
+    ["98773063", "2026-08-05T18:00:00Z", 60, 116, 16, 18],
+    ["99514488", "2026-08-05T14:15:00-04:00", 45, 15, 4, 8],
+    ["92472792", "2026-08-05T14:00:00-05:00", 60, 116, 11, 20],
+    ["95524914", "2026-08-05T15:30:00-05:00", 60, 92, 9, 35],
+    ["98060674", "2026-08-05T17:00:00-05:00", 60, 58, 10, 15],
+    ["84992557", "2026-08-05T19:30:00-05:00", 60, 46, 5, 7],
+    ["99043376", "2026-08-06T15:00:00+02:00", 60, 34, 4, 9],
+    ["102404494", "2026-08-06T11:00:00-03:00", 60, 12, 4, 5],
+    ["101590770", "2026-08-06T18:00:00+02:00", 60, 36, 5, 3],
+    ["77574889", "2026-08-06T13:30:00-04:00", 30, 184, 20, 28],
+    ["79701133", "2026-08-06T20:00:00+02:00", 60, 46, 5, 18],
+    ["97903955", "2026-08-06T13:00:00-07:00", 60, 35, 2, 5],
+    ["105632532", "2026-08-06T21:00:00Z", 30, 1, 0, 1],
+    ["88639021", "2026-08-06T20:00:00-05:00", 60, 107, 13, 26],
+    ["99279166", "2026-08-07T12:30:00-04:00", 60, 49, 4, 4],
+    ["78234104", "2026-08-07T17:00:00Z", 30, 140, 20, 35],
+    ["98365165", "2026-08-07T19:30:00Z", 120, 35, 4, 5],
+    ["99524637", "2026-08-07T16:15:00-05:00", 60, 38, 4, 16],
+    ["78118817", "2026-08-08T10:00:00Z", 60, 59, 14, 17],
+    ["105685987", "2026-08-08T14:45:00Z", 60, 19, 2, 0],
+    ["105686009", "2026-08-08T16:00:00Z", 60, 14, 4, 0],
+    ["105686058", "2026-08-08T17:15:00Z", 60, 17, 2, 0],
+    ["105686094", "2026-08-08T18:30:00Z", 60, 22, 2, 1],
+    ["105716256", "2026-08-09T14:30:00Z", 60, 31, 4, 0],
+    ["105716285", "2026-08-09T15:45:00Z", 60, 9, 1, 0],
+    ["105716726", "2026-08-09T12:00:00-05:00", 60, 12, 6, 1],
+    ["99103334", "2026-08-10T15:00:00+02:00", 60, 37, 5, 19],
+    ["95935955", "2026-08-10T08:30:00-05:00", 60, 85, 10, 16],
+    ["88607175", "2026-08-10T09:30:00-05:00", 60, 144, 12, 32],
+    ["94135151", "2026-08-10T10:00:00-07:00", 60, 104, 12, 14],
+    ["98772775", "2026-08-10T17:00:00Z", 60, 97, 19, 10],
+    ["95936503", "2026-08-10T13:30:00-05:00", 60, 131, 3, 21],
+    ["98272918", "2026-08-10T11:30:00-07:00", 45, 26, 2, 5],
+    ["102305449", "2026-08-10T13:00:00-07:00", 60, 83, 7, 9],
+    ["93814082", "2026-08-10T14:30:00-07:00", 60, 60, 7, 19],
+    ["82657819", "2026-08-10T18:45:00-05:00", 60, 74, 7, 19],
+    ["95936809", "2026-08-11T12:30:00Z", 60, 41, 3, 5],
+    ["99043376", "2026-08-11T15:00:00+02:00", 60, 34, 4, 9],
+    ["81161371", "2026-08-11T16:00:00Z", 60, 24, 5, 14],
+    ["92924023", "2026-08-11T18:00:00+02:00", 60, 97, 17, 26],
+    ["95709739", "2026-08-11T10:00:00-07:00", 60, 54, 12, 11],
+    ["101058501", "2026-08-11T17:00:00Z", 60, 68, 13, 7],
+    ["105940929", "2026-08-11T20:30:00+02:00", 60, 4, 1, 1],
+    ["97749266", "2026-08-11T12:30:00-07:00", 60, 39, 4, 19],
+    ["101899350", "2026-08-11T16:15:00-05:00", 60, 31, 0, 8],
+    ["101899426", "2026-08-11T17:30:00-05:00", 60, 56, 3, 14],
+    ["95147996", "2026-08-11T18:45:00-05:00", 60, 86, 6, 18],
+    ["89296947", "2026-08-12T08:00:00-05:00", 60, 210, 35, 69],
+    ["95524931", "2026-08-12T11:00:00-05:00", 60, 130, 20, 23],
+    ["94244143", "2026-08-12T09:30:00-07:00", 60, 66, 12, 14],
+    ["78118817", "2026-08-12T20:00:00+02:00", 60, 61, 11, 16],
+    ["99514488", "2026-08-12T14:15:00-04:00", 45, 24, 4, 8],
+    ["92472792", "2026-08-12T14:00:00-05:00", 60, 113, 10, 20],
+    ["83690403", "2026-08-12T21:05:00+02:00", 55, 59, 14, 9],
+    ["95524914", "2026-08-12T15:30:00-05:00", 60, 96, 10, 34],
+    ["98060674", "2026-08-12T17:00:00-05:00", 60, 67, 11, 16],
+    ["97520427", "2026-08-12T19:30:00-05:00", 60, 69, 3, 9],
+    ["99043376", "2026-08-13T15:00:00+02:00", 60, 34, 4, 9],
+    ["84291484", "2026-08-13T08:30:00-05:00", 60, 84, 10, 16],
+    ["102404494", "2026-08-13T11:00:00-03:00", 60, 9, 6, 5],
+    ["101230736", "2026-08-13T10:30:00-05:00", 60, 72, 5, 10],
+    ["101590770", "2026-08-13T18:00:00+02:00", 60, 38, 5, 4],
+    ["79701133", "2026-08-13T17:00:00Z", 60, 45, 5, 18],
+    ["97903955", "2026-08-13T13:00:00-07:00", 60, 42, 2, 5],
+    ["88837879", "2026-08-13T16:15:00-05:00", 60, 43, 2, 5],
+    ["105945709", "2026-08-13T22:20:00Z", 150, 2, 2, 0],
+    ["77574889", "2026-08-13T23:00:00Z", 30, 179, 15, 32],
+    ["88639021", "2026-08-13T20:00:00-05:00", 60, 106, 13, 25],
+    ["90777794", "2026-08-14T08:00:00-05:00", 60, 139, 16, 24],
+    ["104627270", "2026-08-14T15:00:00+02:00", 60, 5, 2, 1],
+    ["80791115", "2026-08-14T10:30:00-05:00", 60, 129, 13, 15],
+    ["99279166", "2026-08-14T12:30:00-04:00", 60, 47, 5, 6],
+    ["97283333", "2026-08-14T12:30:00-05:00", 60, 44, 4, 8],
+    ["78234104", "2026-08-14T14:00:00-04:00", 30, 147, 22, 35],
+    ["97285661", "2026-08-14T14:00:00-05:00", 60, 62, 5, 14],
+    ["98365165", "2026-08-14T19:00:00Z", 30, 32, 1, 6],
+    ["99524637", "2026-08-14T16:15:00-05:00", 60, 36, 5, 17],
+    ["98773063", "2026-08-15T15:00:00Z", 60, 140, 18, 18],
+    ["106009025", "2026-08-15T16:00:00Z", 60, 13, 1, 0],
+    ["106009248", "2026-08-15T17:15:00Z", 60, 12, 3, 0],
+    ["103253574", "2026-08-16T19:00:00+07:00", 60, 188, 16, 4],
+    ["105931305", "2026-08-16T20:30:00Z", 60, 11, 1, 3],
+    ["104627270", "2026-08-17T13:00:00Z", 60, 6, 1, 1],
+    ["95935955", "2026-08-17T08:30:00-05:00", 60, 81, 9, 16],
+    ["88607175", "2026-08-17T09:30:00-05:00", 60, 143, 13, 32],
+    ["94135151", "2026-08-17T10:00:00-07:00", 60, 99, 13, 15],
+    ["98772775", "2026-08-17T13:30:00-04:00", 60, 103, 19, 10],
+    ["105931541", "2026-08-17T14:15:00-04:00", 60, 10, 0, 0],
+    ["95936503", "2026-08-17T13:30:00-05:00", 60, 132, 5, 20],
+    ["98272918", "2026-08-17T11:30:00-07:00", 45, 28, 1, 5],
+    ["87913685", "2026-08-17T20:00:00Z", 120, 28, 1, 5],
+    ["102305449", "2026-08-17T13:00:00-07:00", 60, 79, 8, 9],
+    ["93814082", "2026-08-17T14:30:00-07:00", 60, 63, 6, 21],
+    ["82657819", "2026-08-17T18:45:00-05:00", 60, 73, 8, 20],
+    ["99043376", "2026-08-18T15:00:00+02:00", 60, 41, 4, 9],
+    ["95936809", "2026-08-18T10:00:00-05:00", 60, 45, 3, 6],
+    ["92924023", "2026-08-18T18:00:00+02:00", 60, 95, 18, 26],
+    ["95709739", "2026-08-18T10:00:00-07:00", 60, 56, 11, 11],
+    ["101058501", "2026-08-18T17:15:00Z", 60, 60, 12, 9],
+    ["81161371", "2026-08-18T14:00:00-04:00", 60, 25, 4, 14],
+    ["105940929", "2026-08-18T20:30:00+02:00", 60, 13, 1, 1],
+    ["98364825", "2026-08-18T15:15:00-04:00", 75, 51, 6, 10],
+    ["97749266", "2026-08-18T12:30:00-07:00", 60, 41, 3, 19],
+    ["101899350", "2026-08-18T16:15:00-05:00", 60, 29, 0, 8],
+    ["101899426", "2026-08-18T17:30:00-05:00", 60, 51, 3, 12],
+    ["95147996", "2026-08-18T18:45:00-05:00", 60, 81, 7, 18],
+    ["89296947", "2026-08-19T08:00:00-05:00", 60, 203, 36, 71],
+    ["95524931", "2026-08-19T11:00:00-05:00", 60, 124, 21, 23],
+    ["105931112", "2026-08-19T18:00:00+02:00", 60, 5, 0, 0],
+    ["94244143", "2026-08-19T09:30:00-07:00", 60, 63, 11, 13],
+    ["98773063", "2026-08-19T13:00:00-04:00", 60, 112, 16, 19],
+    ["78118817", "2026-08-19T20:00:00+02:00", 60, 56, 11, 16],
+    ["92472792", "2026-08-19T14:00:00-05:00", 60, 107, 11, 20],
+    ["83690403", "2026-08-19T21:05:00+02:00", 55, 51, 14, 9],
+    ["95524914", "2026-08-19T15:30:00-05:00", 60, 87, 9, 35],
+    ["98060674", "2026-08-19T17:00:00-05:00", 60, 56, 10, 16],
+    ["84992557", "2026-08-19T19:30:00-05:00", 60, 44, 5, 9],
+    ["97520427", "2026-08-19T19:30:00-05:00", 60, 64, 4, 9],
+    ["99043376", "2026-08-20T15:00:00+02:00", 60, 35, 5, 9],
+    ["84291484", "2026-08-20T08:30:00-05:00", 60, 73, 10, 16],
+    ["102404494", "2026-08-20T11:00:00-03:00", 60, 9, 4, 5],
+    ["101230736", "2026-08-20T10:30:00-05:00", 60, 65, 4, 10],
+    ["101590770", "2026-08-20T18:00:00+02:00", 60, 28, 5, 3],
+    ["77574889", "2026-08-20T13:30:00-04:00", 30, 179, 16, 30],
+    ["79701133", "2026-08-20T20:00:00+02:00", 60, 42, 5, 18],
+    ["97903955", "2026-08-20T13:00:00-07:00", 60, 34, 2, 5],
+    ["88837879", "2026-08-20T16:15:00-05:00", 60, 40, 1, 5],
+    ["88639021", "2026-08-20T20:00:00-05:00", 60, 101, 12, 25],
+    ["90777794", "2026-08-21T08:00:00-05:00", 60, 126, 16, 24],
+    ["99103334", "2026-08-21T13:00:00Z", 60, 41, 6, 19],
+    ["80791115", "2026-08-21T10:30:00-05:00", 60, 113, 11, 15],
+    ["99279166", "2026-08-21T12:30:00-04:00", 60, 40, 5, 4],
+    ["106039105", "2026-08-21T14:00:00-03:00", 60, 14, 1, 0],
+    ["97283333", "2026-08-21T12:30:00-05:00", 60, 37, 3, 7],
+    ["78234104", "2026-08-21T14:00:00-04:00", 30, 132, 19, 35],
+    ["97285661", "2026-08-21T14:00:00-05:00", 60, 56, 3, 15],
+    ["98365165", "2026-08-21T15:30:00-04:00", 60, 32, 1, 5],
+    ["99524637", "2026-08-21T16:15:00-05:00", 60, 33, 4, 16],
+    ["106012667", "2026-08-22T09:30:00-04:00", 60, 29, 6, 0],
+    ["103253574", "2026-08-23T19:00:00+07:00", 60, 151, 15, 5],
+    ["105716726", "2026-08-23T12:00:00-05:00", 60, 8, 4, 1],
+    ["105931305", "2026-08-23T20:00:00+02:00", 60, 3, 1, 1],
+    ["99103334", "2026-08-24T15:00:00+02:00", 60, 37, 5, 19],
+    ["95935955", "2026-08-24T08:30:00-05:00", 60, 71, 9, 17],
+    ["88607175", "2026-08-24T09:30:00-05:00", 60, 133, 11, 32],
+    ["94135151", "2026-08-24T10:00:00-07:00", 60, 95, 10, 15],
+    ["98772775", "2026-08-24T13:30:00-04:00", 60, 92, 17, 10],
+    ["105931541", "2026-08-24T14:15:00-04:00", 60, 2, 0, 0],
+    ["95936503", "2026-08-24T13:30:00-05:00", 60, 116, 3, 20],
+    ["98272918", "2026-08-24T11:30:00-07:00", 45, 23, 2, 5],
+    ["102305449", "2026-08-24T13:00:00-07:00", 60, 71, 8, 9],
+    ["87913685", "2026-08-24T16:05:00-04:00", 90, 26, 1, 5],
+    ["93814082", "2026-08-24T14:30:00-07:00", 60, 58, 6, 19],
+    ["82657819", "2026-08-24T18:45:00-05:00", 60, 70, 7, 19],
+    ["99043376", "2026-08-25T15:00:00+02:00", 60, 34, 4, 9],
+    ["95936809", "2026-08-25T10:00:00-05:00", 60, 38, 3, 6],
+    ["92924023", "2026-08-25T18:00:00+02:00", 60, 86, 17, 26],
+    ["95709739", "2026-08-25T10:00:00-07:00", 60, 52, 10, 11],
+    ["101058501", "2026-08-25T13:30:00-04:00", 60, 57, 11, 6],
+    ["81161371", "2026-08-25T14:00:00-04:00", 60, 22, 4, 14],
+    ["105940929", "2026-08-25T20:30:00+02:00", 60, 4, 1, 1],
+    ["98364825", "2026-08-25T15:15:00-04:00", 75, 43, 6, 10],
+    ["97749266", "2026-08-25T12:30:00-07:00", 60, 35, 3, 19],
+    ["101899350", "2026-08-25T16:15:00-05:00", 60, 27, 0, 8],
+    ["101899426", "2026-08-25T17:30:00-05:00", 60, 45, 3, 14],
+    ["95147996", "2026-08-25T18:45:00-05:00", 60, 78, 6, 18],
+    ["89296947", "2026-08-26T08:00:00-05:00", 60, 197, 35, 69],
+    ["95524931", "2026-08-26T11:00:00-05:00", 60, 117, 20, 23],
+    ["105931112", "2026-08-26T18:00:00+02:00", 60, 2, 0, 0],
+    ["94244143", "2026-08-26T09:30:00-07:00", 60, 59, 11, 13],
+    ["98773063", "2026-08-26T13:00:00-04:00", 60, 110, 15, 19],
+    ["78118817", "2026-08-26T20:00:00+02:00", 60, 55, 11, 16],
+    ["99514488", "2026-08-26T14:15:00-04:00", 45, 15, 4, 8],
+    ["92472792", "2026-08-26T14:00:00-05:00", 60, 104, 10, 20],
+    ["83690403", "2026-08-26T21:05:00+02:00", 55, 50, 14, 9],
+    ["95524914", "2026-08-26T15:30:00-05:00", 60, 87, 9, 35],
+    ["98060674", "2026-08-26T17:00:00-05:00", 60, 55, 10, 16],
+    ["97520427", "2026-08-26T19:30:00-05:00", 60, 63, 3, 9],
+    ["99043376", "2026-08-27T15:00:00+02:00", 60, 34, 4, 9],
+    ["84291484", "2026-08-27T08:30:00-05:00", 60, 73, 10, 16],
+    ["102404494", "2026-08-27T11:00:00-03:00", 60, 8, 4, 5],
+    ["101230736", "2026-08-27T10:30:00-05:00", 60, 61, 4, 10],
+    ["101590770", "2026-08-27T18:00:00+02:00", 60, 27, 5, 3],
+    ["77574889", "2026-08-27T13:30:00-04:00", 30, 171, 15, 29],
+    ["79701133", "2026-08-27T20:00:00+02:00", 60, 41, 5, 18],
+    ["97903955", "2026-08-27T13:00:00-07:00", 60, 34, 2, 5],
+    ["88837879", "2026-08-27T16:15:00-05:00", 60, 40, 1, 5],
+    ["88639021", "2026-08-27T20:00:00-05:00", 60, 101, 12, 25],
+    ["90777794", "2026-08-28T08:00:00-05:00", 60, 125, 16, 24],
+    ["104627270", "2026-08-28T15:00:00+02:00", 60, 4, 2, 1],
+    ["80791115", "2026-08-28T10:30:00-05:00", 60, 110, 11, 15],
+    ["99279166", "2026-08-28T12:30:00-04:00", 60, 39, 4, 4],
+    ["106039105", "2026-08-28T14:00:00-03:00", 60, 6, 0, 0],
+    ["97283333", "2026-08-28T12:30:00-05:00", 60, 35, 3, 7],
+    ["78234104", "2026-08-28T14:00:00-04:00", 30, 132, 19, 35],
+    ["97285661", "2026-08-28T14:00:00-05:00", 60, 56, 3, 15],
+    ["98365165", "2026-08-28T15:30:00-04:00", 60, 32, 1, 5],
+    ["99524637", "2026-08-28T16:15:00-05:00", 60, 33, 4, 16],
+    ["106012667", "2026-08-29T09:30:00-04:00", 60, 13, 3, 0],
+    ["103253574", "2026-08-30T19:00:00+07:00", 60, 151, 14, 5],
+    ["105716726", "2026-08-30T12:00:00-05:00", 60, 8, 4, 1],
+    ["105931305", "2026-08-30T20:00:00+02:00", 60, 3, 1, 1],
+    ["99103334", "2026-08-31T15:00:00+02:00", 60, 37, 5, 19],
+    ["95935955", "2026-08-31T08:30:00-05:00", 60, 71, 9, 17],
+    ["88607175", "2026-08-31T09:30:00-05:00", 60, 133, 11, 32],
+    ["94135151", "2026-08-31T10:00:00-07:00", 60, 93, 10, 15],
+    ["98772775", "2026-08-31T13:30:00-04:00", 60, 92, 17, 10],
+    ["105931541", "2026-08-31T14:15:00-04:00", 60, 2, 0, 0],
+    ["95936503", "2026-08-31T13:30:00-05:00", 60, 117, 3, 20],
+    ["98272918", "2026-08-31T11:30:00-07:00", 45, 23, 2, 5],
+    ["102305449", "2026-08-31T13:00:00-07:00", 60, 69, 8, 9],
+    ["87913685", "2026-08-31T16:05:00-04:00", 90, 26, 1, 5],
+    ["93814082", "2026-08-31T14:30:00-07:00", 60, 57, 6, 19],
+    ["82657819", "2026-08-31T18:45:00-05:00", 60, 70, 7, 19],
+    ["99043376", "2026-09-01T15:00:00+02:00", 60, 34, 4, 9],
+    ["95936809", "2026-09-01T10:00:00-05:00", 60, 38, 3, 6],
+    ["92924023", "2026-09-01T18:00:00+02:00", 60, 85, 17, 26],
+    ["95709739", "2026-09-01T10:00:00-07:00", 60, 52, 10, 11],
+    ["101058501", "2026-09-01T13:30:00-04:00", 60, 57, 11, 6],
+    ["81161371", "2026-09-01T14:00:00-04:00", 60, 22, 4, 14],
+    ["105940929", "2026-09-01T20:30:00+02:00", 60, 4, 1, 1],
+    ["98364825", "2026-09-01T15:15:00-04:00", 75, 43, 6, 10],
+    ["97749266", "2026-09-01T12:30:00-07:00", 60, 35, 3, 19],
+    ["101899350", "2026-09-01T16:15:00-05:00", 60, 27, 0, 8],
+    ["101899426", "2026-09-01T17:30:00-05:00", 60, 45, 3, 14],
+    ["95147996", "2026-09-01T18:45:00-05:00", 60, 78, 6, 18],
+    ["89296947", "2026-09-02T08:00:00-05:00", 60, 197, 35, 69],
+    ["95524931", "2026-09-02T11:00:00-05:00", 60, 117, 20, 23],
+    ["105931112", "2026-09-02T18:00:00+02:00", 60, 2, 0, 0],
+    ["94244143", "2026-09-02T09:30:00-07:00", 60, 59, 11, 13],
+    ["98773063", "2026-09-02T13:00:00-04:00", 60, 109, 15, 19],
+    ["78118817", "2026-09-02T20:00:00+02:00", 60, 55, 11, 16],
+    ["99514488", "2026-09-02T14:15:00-04:00", 45, 15, 4, 8],
+    ["92472792", "2026-09-02T14:00:00-05:00", 60, 104, 10, 20],
+    ["83690403", "2026-09-02T21:05:00+02:00", 55, 50, 14, 9],
+    ["95524914", "2026-09-02T15:30:00-05:00", 60, 87, 9, 35],
+    ["98060674", "2026-09-02T17:00:00-05:00", 60, 55, 10, 16],
+    ["84992557", "2026-09-02T19:30:00-05:00", 60, 41, 5, 9],
+    ["97520427", "2026-09-02T19:30:00-05:00", 60, 63, 3, 9],
+    ["99043376", "2026-09-03T15:00:00+02:00", 60, 34, 4, 9],
+    ["84291484", "2026-09-03T08:30:00-05:00", 60, 73, 10, 16],
+    ["102404494", "2026-09-03T11:00:00-03:00", 60, 8, 4, 5],
+    ["101230736", "2026-09-03T10:30:00-05:00", 60, 61, 4, 10],
+    ["101590770", "2026-09-03T18:00:00+02:00", 60, 27, 5, 3],
+    ["77574889", "2026-09-03T13:30:00-04:00", 30, 171, 15, 29],
+    ["79701133", "2026-09-03T20:00:00+02:00", 60, 41, 5, 18],
+    ["97903955", "2026-09-03T13:00:00-07:00", 60, 34, 2, 5],
+    ["88837879", "2026-09-03T16:15:00-05:00", 60, 40, 1, 5],
+    ["88639021", "2026-09-03T20:00:00-05:00", 60, 101, 12, 25],
+    ["90777794", "2026-09-04T08:00:00-05:00", 60, 125, 16, 24],
+    ["104627270", "2026-09-04T15:00:00+02:00", 60, 4, 2, 1],
+    ["80791115", "2026-09-04T10:30:00-05:00", 60, 110, 11, 15],
+    ["99279166", "2026-09-04T12:30:00-04:00", 60, 39, 4, 4],
+    ["106039105", "2026-09-04T14:00:00-03:00", 60, 6, 0, 0],
+    ["97283333", "2026-09-04T12:30:00-05:00", 60, 35, 3, 7],
+    ["78234104", "2026-09-04T14:00:00-04:00", 30, 132, 19, 35],
+    ["97285661", "2026-09-04T14:00:00-05:00", 60, 56, 3, 15],
+    ["98365165", "2026-09-04T15:30:00-04:00", 60, 32, 1, 5],
+    ["99524637", "2026-09-04T16:15:00-05:00", 60, 33, 4, 16],
+    ["106012667", "2026-09-05T09:30:00-04:00", 60, 13, 3, 0],
+    ["103253574", "2026-09-06T19:00:00+07:00", 60, 151, 14, 5],
+    ["105716726", "2026-09-06T12:00:00-05:00", 60, 8, 4, 1],
+    ["105931305", "2026-09-06T20:00:00+02:00", 60, 3, 1, 1],
+    ["99103334", "2026-09-07T15:00:00+02:00", 60, 37, 5, 19],
+    ["95935955", "2026-09-07T08:30:00-05:00", 60, 71, 9, 17],
+    ["88607175", "2026-09-07T09:30:00-05:00", 60, 133, 11, 32],
+    ["94135151", "2026-09-07T10:00:00-07:00", 60, 93, 10, 15],
+    ["98772775", "2026-09-07T13:30:00-04:00", 60, 92, 17, 10],
+    ["105931541", "2026-09-07T14:15:00-04:00", 60, 2, 0, 0],
+    ["95936503", "2026-09-07T13:30:00-05:00", 60, 117, 3, 20],
+    ["98272918", "2026-09-07T11:30:00-07:00", 45, 23, 2, 5],
+    ["102305449", "2026-09-07T13:00:00-07:00", 60, 69, 8, 9],
+    ["87913685", "2026-09-07T16:05:00-04:00", 90, 26, 1, 5],
+    ["93814082", "2026-09-07T14:30:00-07:00", 60, 57, 6, 19],
+    ["82657819", "2026-09-07T18:45:00-05:00", 60, 70, 7, 19]
+  ]
+}</script>
+<script id="app">
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("ga-data").textContent);
+
+  var CATS = [
+    { k: "market",     label: "Market Briefings" },
+    { k: "trading",    label: "Trading Skills" },
+    { k: "wsp",        label: "WSP Workshops" },
+    { k: "investing",  label: "Investing" },
+    { k: "onboarding", label: "Onboarding & Brokers" },
+    { k: "path",       label: "Success Path" }
+  ];
+
+  // Provisional grouping by title. This is the single swap point for the
+  // level-based colour coding: replace classify() with a postId -> level map.
+  function classify(t) {
+    var s = t.toLowerCase();
+    if (s.indexOf("(wsp)") === 0) return "wsp";
+    if (s.indexOf("success path") !== -1) return "path";
+    if (/onboard|ssm|broker|platform/.test(s)) return "onboarding";
+    if (/market review|weekly recap|preparing for the week|markets update|economic outlook|markets and investment/.test(s)) return "market";
+    if (/invest/.test(s)) return "investing";
+    return "trading";
+  }
+
+  var seriesCount = {};
+  var EVENTS = DATA.instances.map(function (r, i) {
+    var rid = r[0], start = new Date(r[1]);
+    seriesCount[rid] = (seriesCount[rid] || 0) + 1;
+    var s = DATA.series[rid];
+    return {
+      uid: rid + "_" + i, rid: rid,
+      title: s.t, url: DATA.meta.postUrlBase + s.s,
+      start: start, end: new Date(start.getTime() + r[2] * 60000),
+      dur: r[2], yes: r[3], maybe: r[4], no: r[5],
+      cat: classify(s.t)
+    };
+  }).sort(function (a, b) { return a.start - b.start; });
+
+  var byUid = {};
+  EVENTS.forEach(function (e) { byUid[e.uid] = e; });
+
+  var byDay = {};
+  function dayKey(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  EVENTS.forEach(function (e) {
+    var k = dayKey(e.start);
+    (byDay[k] = byDay[k] || []).push(e);
+  });
+
+  var MONTHS = [{ y: 2026, m: 7 }, { y: 2026, m: 8 }]; // months covered by the snapshot
+  var now = new Date();
+  var startIdx = 0;
+  MONTHS.forEach(function (mm, i) { if (now.getFullYear() === mm.y && now.getMonth() === mm.m) startIdx = i; });
+
+  var state = { view: "month", mi: startIdx, on: {}, sel: null, fromDay: null };
+  CATS.forEach(function (c) { state.on[c.k] = true; });
+
+  var fmtTime = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" });
+  var fmtLong = new Intl.DateTimeFormat(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  var fmtShort = new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short" });
+  var fmtWd = new Intl.DateTimeFormat(undefined, { weekday: "short" });
+  var MNAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function catLabel(k) { for (var i = 0; i < CATS.length; i++) if (CATS[i].k === k) return CATS[i].label; return k; }
+  function visible(e) { return state.on[e.cat]; }
+
+  /* ---------- header: next / live session ---------- */
+  var elNext = document.getElementById("nextup");
+  function renderNext() {
+    var live = null, next = null;
+    for (var i = 0; i < EVENTS.length; i++) {
+      var e = EVENTS[i];
+      if (e.start <= now && now < e.end && !live) live = e;
+      if (e.start > now) { next = e; break; }
+    }
+    var t = live || next;
+    elNext.hidden = false;
+    var dot = document.getElementById("ndot"), lbl = document.getElementById("nlbl"),
+        a = document.getElementById("ntitle"), w = document.getElementById("nwhen");
+    if (live) {
+      lbl.textContent = "Live now";
+      a.textContent = live.title; a.href = live.url;
+      w.textContent = "started " + fmtTime.format(live.start) + " · ends " + fmtTime.format(live.end);
+    } else if (next) {
+      lbl.textContent = "Next session";
+      a.textContent = next.title; a.href = next.url;
+      var ms = next.start - now, m = Math.round(ms / 60000);
+      var when = m < 60 ? "in " + m + " min"
+        : m < 60 * 30 ? "in " + Math.floor(m / 60) + " h " + String(m % 60).padStart(2, "0") + " min"
+        : "on " + fmtShort.format(next.start);
+      w.textContent = when + " · " + fmtTime.format(next.start);
+      dot.style.animationDuration = "3s";
+    } else {
+      lbl.textContent = "Snapshot ended";
+      a.textContent = "The live app will keep this current"; a.removeAttribute("href");
+      w.textContent = "data through " + fmtShort.format(EVENTS[EVENTS.length - 1].start);
+      dot.style.animation = "none";
+    }
+  }
+
+  /* ---------- legend ---------- */
+  var elLegend = document.getElementById("legend");
+  function renderLegend() {
+    var counts = {};
+    EVENTS.forEach(function (e) { counts[e.cat] = (counts[e.cat] || 0) + 1; });
+    var h = CATS.map(function (c) {
+      return '<button class="lchip" style="--c:var(--cat-' + c.k + ')" data-cat="' + c.k + '" aria-pressed="' + state.on[c.k] + '">' +
+        '<span class="dot"></span>' + c.label + ' <span class="n">' + (counts[c.k] || 0) + "</span></button>";
+    }).join("");
+    h += '<span class="lhint">colour = session type · becomes course levels next</span>';
+    elLegend.innerHTML = h;
+  }
+  elLegend.addEventListener("click", function (ev) {
+    var b = ev.target.closest(".lchip"); if (!b) return;
+    var k = b.dataset.cat;
+    var allOn = CATS.every(function (c) { return state.on[c.k]; });
+    var onlyThis = state.on[k] && CATS.every(function (c) { return c.k === k ? state.on[c.k] : !state.on[c.k]; });
+    if (allOn) { CATS.forEach(function (c) { state.on[c.k] = c.k === k; }); }      // focus one type
+    else if (onlyThis) { CATS.forEach(function (c) { state.on[c.k] = true; }); }   // back to all
+    else { state.on[k] = !state.on[k]; }
+    if (CATS.every(function (c) { return !state.on[c.k]; })) CATS.forEach(function (c) { state.on[c.k] = true; });
+    renderLegend(); renderMain();
+  });
+
+  /* ---------- month view ---------- */
+  function renderMonth() {
+    var mm = MONTHS[state.mi], y = mm.y, m = mm.m;
+    document.getElementById("mtitle").textContent = MNAMES[m] + " " + y;
+    document.getElementById("prev").disabled = state.mi === 0;
+    document.getElementById("next").disabled = state.mi === MONTHS.length - 1;
+
+    var notice = document.getElementById("notice");
+    if (y === 2026 && m === 8) {
+      notice.hidden = false;
+      notice.textContent = "Snapshot covers up to Mon 7 September — in the live app the rest of the month fills in automatically.";
+    } else notice.hidden = true;
+
+    var first = new Date(y, m, 1);
+    var lead = (first.getDay() + 6) % 7; // Monday-first column offset
+    var dim = new Date(y, m + 1, 0).getDate();
+    var rows = Math.ceil((lead + dim) / 7);
+    var cur = new Date(y, m, 1 - lead);
+
+    var wd = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var h = '<div class="dow">' + wd.map(function (d) { return "<div>" + d + "</div>"; }).join("") + "</div>";
+    h += '<div class="cells">';
+    var todayK = dayKey(now);
+    for (var i = 0; i < rows * 7; i++) {
+      var k = dayKey(cur);
+      var evs = (byDay[k] || []).filter(visible);
+      var cls = "cell";
+      if (cur.getMonth() !== m) cls += " out";
+      if (cur.getDay() === 0 || cur.getDay() === 6) cls += " we";
+      if (k === todayK) cls += " today";
+      else if (cur < now && k !== todayK) cls += " past";
+      var MAX = 4;
+      h += '<div class="' + cls + '"><span class="dnum">' + cur.getDate() + "</span>";
+      if (evs.length) {
+        h += '<div class="chips">';
+        evs.slice(0, MAX).forEach(function (e) {
+          h += '<button class="chip" style="--c:var(--cat-' + e.cat + ')" data-uid="' + e.uid + '" title="' + esc(e.title) + '">' +
+            '<span class="dot"></span><span class="tm">' + fmtTime.format(e.start) + '</span><span class="ct">' + esc(e.title) + "</span></button>";
+        });
+        h += "</div>";
+        if (evs.length > MAX) h += '<button class="more" data-day="' + k + '">+' + (evs.length - MAX) + " more</button>";
+      }
+      h += "</div>";
+      cur.setDate(cur.getDate() + 1);
+    }
+    h += "</div>";
+    document.getElementById("main").innerHTML = h;
+  }
+
+  /* ---------- agenda view ---------- */
+  function renderAgenda() {
+    document.getElementById("mtitle").textContent = "Upcoming";
+    document.getElementById("prev").disabled = true;
+    document.getElementById("next").disabled = true;
+    document.getElementById("notice").hidden = true;
+
+    var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var list = EVENTS.filter(function (e) { return e.end >= todayStart && visible(e); });
+    var upcoming = list.length > 0;
+    if (!upcoming) list = EVENTS.filter(visible); // viewing after the snapshot window: show everything
+
+    var h = '<div class="agenda">';
+    if (!upcoming) h += '<div class="agempty">The snapshot window has passed — showing all captured sessions. The live app would list what’s next.</div>';
+    var lastK = null, todayK = dayKey(now);
+    list.forEach(function (e) {
+      var k = dayKey(e.start);
+      if (k !== lastK) {
+        if (lastK !== null) h += "</div></section>";
+        h += '<section class="agday' + (k === todayK ? " istoday" : "") + '"><div class="agh"><span class="wd">' +
+          (k === todayK ? "Today" : fmtWd.format(e.start)) + '</span><span>' + fmtShort.format(e.start) + "</span></div><div class=\"agrows\">";
+        lastK = k;
+      }
+      h += '<button class="agrow" style="--c:var(--cat-' + e.cat + ')" data-uid="' + e.uid + '">' +
+        '<span class="dot"></span><span class="tm">' + fmtTime.format(e.start) + "–" + fmtTime.format(e.end) + '</span>' +
+        '<span class="ti">' + esc(e.title) + '</span><span class="rs">✓ ' + e.yes + "</span></button>";
+    });
+    if (lastK !== null) h += "</div></section>";
+    h += "</div>";
+    document.getElementById("main").innerHTML = h;
+  }
+
+  function renderMain() { state.view === "month" ? renderMonth() : renderAgenda(); }
+
+  /* ---------- drawer ---------- */
+  var drawer = document.getElementById("drawer"), backdrop = document.getElementById("backdrop"),
+      dbody = document.getElementById("dbody"), dback = document.getElementById("dback");
+  var lastFocus = null;
+
+  function openDrawer() {
+    drawer.classList.add("on"); backdrop.classList.add("on");
+    lastFocus = document.activeElement;
+    document.getElementById("dclose").focus();
+  }
+  function closeDrawer() {
+    drawer.classList.remove("on"); backdrop.classList.remove("on");
+    state.sel = null; state.fromDay = null;
+    if (lastFocus) lastFocus.focus();
+  }
+
+  function showEvent(uid) {
+    var e = byUid[uid]; if (!e) return;
+    state.sel = uid;
+    dback.hidden = !state.fromDay;
+    var reps = seriesCount[e.rid];
+    dbody.innerHTML =
+      '<span class="catpill" style="--c:var(--cat-' + e.cat + ')"><span class="dot"></span>' + catLabel(e.cat) + "</span>" +
+      '<h2 class="dtitle" id="dtitle">' + esc(e.title) + "</h2>" +
+      '<div class="dwhen">' +
+        '<span class="d1">' + fmtLong.format(e.start) + "</span>" +
+        '<span class="mono">' + fmtTime.format(e.start) + " – " + fmtTime.format(e.end) + " · " + e.dur + " min · your time (" + tzName + ")</span>" +
+      "</div>" +
+      '<div class="rsvps">' +
+        '<div class="rsvp"><b>' + e.yes + "</b><span>going</span></div>" +
+        '<div class="rsvp"><b>' + e.maybe + "</b><span>maybe</span></div>" +
+        '<div class="rsvp"><b>' + e.no + "</b><span>can’t</span></div>" +
+      "</div>" +
+      (reps > 1 ? '<div class="dser">Recurring session · ' + reps + " times in this snapshot</div>" : '<div class="dser">Single session in this snapshot</div>') +
+      '<a class="cta" href="' + e.url + '" target="_blank" rel="noopener">Open in GOAT Academy ↗</a>';
+    openDrawer();
+  }
+
+  function showDay(k) {
+    state.fromDay = k; state.sel = null; dback.hidden = true;
+    var evs = (byDay[k] || []).filter(visible);
+    var d = evs.length ? evs[0].start : now;
+    dbody.innerHTML =
+      '<h2 class="dtitle" id="dtitle">' + fmtLong.format(d) + "</h2>" +
+      '<div class="dser">' + evs.length + " sessions</div>" +
+      '<div class="daylist">' + evs.map(function (e) {
+        return '<button class="agrow" style="--c:var(--cat-' + e.cat + ')" data-uid="' + e.uid + '">' +
+          '<span class="dot"></span><span class="tm">' + fmtTime.format(e.start) + '</span><span class="ti">' + esc(e.title) + "</span></button>";
+      }).join("") + "</div>";
+    openDrawer();
+  }
+
+  document.getElementById("main").addEventListener("click", function (ev) {
+    var chip = ev.target.closest("[data-uid]");
+    if (chip) { state.fromDay = null; showEvent(chip.dataset.uid); return; }
+    var more = ev.target.closest("[data-day]");
+    if (more) showDay(more.dataset.day);
+  });
+  dbody.addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-uid]");
+    if (b) showEvent(b.dataset.uid);
+  });
+  dback.addEventListener("click", function () { if (state.fromDay) showDay(state.fromDay); });
+  document.getElementById("dclose").addEventListener("click", closeDrawer);
+  backdrop.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && drawer.classList.contains("on")) closeDrawer(); });
+
+  /* ---------- toolbar wiring ---------- */
+  document.getElementById("prev").addEventListener("click", function () { if (state.mi > 0) { state.mi--; renderMonth(); } });
+  document.getElementById("next").addEventListener("click", function () { if (state.mi < MONTHS.length - 1) { state.mi++; renderMonth(); } });
+  document.getElementById("todaybtn").addEventListener("click", function () {
+    state.view = "month"; state.mi = startIdx; syncSeg(); renderMain();
+  });
+  function syncSeg() {
+    document.getElementById("vmonth").setAttribute("aria-pressed", state.view === "month");
+    document.getElementById("vagenda").setAttribute("aria-pressed", state.view === "agenda");
+  }
+  document.getElementById("vmonth").addEventListener("click", function () { state.view = "month"; syncSeg(); renderMain(); });
+  document.getElementById("vagenda").addEventListener("click", function () { state.view = "agenda"; syncSeg(); renderMain(); });
+
+  var tzName = "local";
+  try { tzName = Intl.DateTimeFormat().resolvedOptions().timeZone || "local"; } catch (e) {}
+  document.getElementById("tz").textContent = "TZ " + tzName;
+
+  renderNext(); renderLegend(); renderMain();
+  setInterval(function () { now = new Date(); renderNext(); }, 30000);
+})();
+</script>
+</html>
